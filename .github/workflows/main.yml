@@ -1,0 +1,21 @@
+name: Download Model Files
+on: workflow_dispatch # מאפשר הרצה ידנית
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download files
+        run: |
+          mkdir -p models/search-model/onnx
+          curl -L https://huggingface.co/Xenova/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/tokenizer.json -o models/search-model/tokenizer.json
+          curl -L https://huggingface.co/Xenova/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/config.json -o models/search-model/config.json
+          curl -L https://huggingface.co/Xenova/paraphrase-multilingual-MiniLM-L12-v2/resolve/main/onnx/model_quantized.onnx -o models/search-model/onnx/model_quantized.onnx
+      - name: Commit and Push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Add model files automatically"
+          git push
